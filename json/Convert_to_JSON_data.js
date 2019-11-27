@@ -1,20 +1,37 @@
 /**
- *  Returns list of price objects
+ *  Makes JSON string human-readable
  *
- *  @param {number} index 
- *  @return {array}
- * @customfunction
- *
+ *  @param {string} json {"type": "blah", "value": 123}
+ *  @return {string}
+ *  @customfunction
  */
 function BeautifyJson(json){
-  return JSON.stringify(JSON.parse(json), undefined, 2);
+  return JSON.stringify(JSON.parse(json), JsonStringArguments(), 2);
+}
+
+function JsonStringArguments(){
+  return undefined
 }
 
 /**
- *  Returns list of price objects
+ *  Returns parsed JSON array or object with parameters
  *
- *  @param {number} index 
- *  @return {array}
+ *  @param {string} objectType "array"
+ *  @param {string} key "dummy_1"
+ *  @param {string} types 
+ *                  [
+ *                    ["string", "number", "array", "object"]
+ *                  ]
+ *  @param {string} headers 
+ *                  [
+ *                    ["name", "id", "levels", "props"]
+ *                  ]
+ *  @param {string} data 
+ *                  [
+ *                    ["dummy_1", "1", [1,2,3], {"type": "blah"}],
+ *                    ["dummy_2", "2", [4,5,6], {"type": "blah"}]
+ *                  ]
+ *  @return {array} Parsed JSON array or object with parameters
  * @customfunction
  *
  */
@@ -24,8 +41,21 @@ function ConvertToJsonData(objectType, key, types, headers, data){
   }
   else if(objectType == "array"){
     var json = FillArray(key, types[0], headers[0], data);
-  } 
+  }
   return JSON.stringify(json);
+}
+
+function IsEmptyObject(json){
+  for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+  return true;
+}
+
+function IsEmptyArray(json){
+  if(json.length > 1) { return false; }
+  return true;
 }
 
 function FillArray(key, types, headers, data){
@@ -60,7 +90,8 @@ function FillObjectProperties(json, root, types, headers, data){
 }
 
 function AddPropertyRecursive(json, path, value_type, value){
-  const keys = path.split("/");
+  const keys = path.toString().split("/");
+  if(value == "") { return json; }
   
   if(keys.length <= 1) { 
     AddValue(json, path, value_type, value) 
