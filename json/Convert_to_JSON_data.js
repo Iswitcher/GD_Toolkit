@@ -45,19 +45,7 @@ function ConvertToJsonData(objectType, key, types, headers, data){
   return JSON.stringify(json);
 }
 
-function IsEmptyObject(json){
-  for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
-    }
-  return true;
-}
-
-function IsEmptyArray(json){
-  if(json.length > 1) { return false; }
-  return true;
-}
-
+//Outputs array of unnamed objects. Object parameters are picked from single data row.
 function FillArray(key, types, headers, data){
   var json = [];
   var root = FindRootIndex(types);
@@ -70,6 +58,7 @@ function FillArray(key, types, headers, data){
   return json;
 }
 
+//Outputs single object with parameters from full data array, matched by key
 function FillObject(key, types, headers, data){
   var json = {};
   var root = FindRootIndex(types);
@@ -80,6 +69,8 @@ function FillObject(key, types, headers, data){
   }
   return json;
 }
+
+//==========ADD_NODES_AND_DATA==========
 
 function FillObjectProperties(json, root, types, headers, data){
   for(var i=0; i<headers.length; i++){
@@ -116,9 +107,10 @@ function AddValue(json, key, value_type, value){
   else { 
     json[key] = value; 
   }
-  
   return json;
 }
+
+//==========UTILS==========
 
 function FindRootIndex(types){
   var root = "root"
@@ -126,4 +118,17 @@ function FindRootIndex(types){
     if(types[i]==root){ return i}
   }
   return 0;
+}
+
+function IsEmptyObject(json){
+  for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+  return true;
+}
+
+function IsEmptyArray(json){
+  if(json.length > 1) { return false; }
+  return true;
 }
