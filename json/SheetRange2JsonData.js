@@ -6,8 +6,7 @@
  *  @customfunction
  */
 function beautifyJson(data){
-  var parsedJson = JSON.parse(data)
-  return JSON.stringify(parsedJson, jsonFormatArguments(), 2);
+  return JSON.stringify(JSON.parse(data), jsonFormatArguments(), 2);
 }
 
 function jsonFormatArguments(){
@@ -37,17 +36,14 @@ function jsonFormatArguments(){
  *
  */
 function convertToJsonData(objectType, key, types, headers, data){
-  var result = "";
-  
   switch (objectType) {
     case "object": 
-      result = fillObject(key, types[0], headers[0], data);
-      break;
+      return JSON.stringify(fillObject(key, types[0], headers[0], data));
     case "array":
-      result = fillArray(key, types[0], headers[0], data);
-      break;
+      return JSON.stringify(fillArray(key, types[0], headers[0], data));
+    default:
+      return "";
   }
-  return JSON.stringify(result);
 }
 
 //Outputs array of unnamed objects. Object parameters are picked from single data row.
@@ -80,8 +76,7 @@ function fillObject(key, types, headers, data){
 
 function fillObjectProperties(jsonObject, root, types, headers, data){
   for(var i=0; i<headers.length; i++){
-    if( i==root ) continue;
-    if( isEmpty(types[i], data[i]) ) continue; 
+    if( i==root || isEmpty(types[i], data[i]) ) continue;
     
     jsonObject = addPropertyRecursive(jsonObject, headers[i], types[i], data[i])
   }
