@@ -1,10 +1,3 @@
-var settingsSheetName = "###settings###";
-var mainSheetName     = "###main###";
-
-var settingsKeyName   = "###key###";
-var settingsValueName = "###value###";
-var settingsEndKey    = "###end###";
-
 /**
  *  Export selected range data as single JSON
  *
@@ -13,13 +6,15 @@ var settingsEndKey    = "###end###";
  *  @customfunction
  */
 function exportSingleJson() {
-  var settings = getSettingsBySheetName(settingsSheetName);
+  var settings = getSettingsBySheetName(config.settingsSheetName);
   var path = findSettingsValue(settings, "path");
+  
   var filename = findSettingsValue(settings, "filename") + ".json";
   
-  var data = {};//TODO!
+  var dataObject = rangeToJsonObject(getRangeBySheetName(config.mainSheetName));
+  var json = createJsonObject(dataObject);
   
-  var result = createFile(path, filename, data)
+  var result = createFile(path, filename, beautifyJson(json))
   return result;
 }
 
@@ -33,3 +28,16 @@ function exportSingleJson() {
 function exportSeparateJson() {
   return true;
 }
+
+/**
+ *  Makes JSON string human-readable
+ *
+ *  @param {string} json {"type": "blah", "value": 123}
+ *  @return {string}
+ *  @customfunction
+ */
+function beautifyJson(data){
+  return JSON.stringify(JSON.parse(data), jsonFormatArguments(), 2);
+}
+
+
