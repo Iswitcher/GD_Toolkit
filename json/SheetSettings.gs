@@ -1,17 +1,16 @@
 function getSettingsBySheetName(settingsSheetName){
-  var sheetRange = getSheetRangeByName(settingsSheetName);
-  var settings = getSettingsObject(sheetRange);
-  return settings;
+  var sheetRange = getRangeBySheetName(settingsSheetName);
+  return getSettingsObject(sheetRange);
 }
 
 function getSettingsObject(range){
   var settings = {};
-  var keyCoords     = getSettingsMarkerByName(settingsKeyName, range);
-  var valueCoords   = getSettingsMarkerByName(settingsValueName, range);
-  var endCoords     = getSettingsMarkerByName(settingsEndKey, range);
+  var keyCoords     = getSettingsMarkerByName(config.settingsKeyAnchor, range);
+  var valueCoords   = getSettingsMarkerByName(config.settingsValueAnchor, range);
+  var endCoords     = getSettingsMarkerByName(config.settingsEndAnchor, range);
   
   if(keyCoords.y != valueCoords.y) {
-    throw new Error("Key and value markers are on different rows.");
+    throw new Error("Key and value anchors are on different rows.");
   }
   
   for (var i=keyCoords.y+1; i<endCoords.y; i++){
@@ -51,7 +50,6 @@ function findSettingsValue(settings, key){
   }
   if(isEmpty(settings[key])){
     throw new Error("Setting "+key+" is empty.");
-  }
-  
+  }  
   return settings[key]
 }
