@@ -21,5 +21,6 @@ function isEmptyObject(data){
 function isEmptyString(data){
   if (data == undefined || data == null || data == ""){
     return true;
-  } else return false;
+  } 
+  return false;
 }
