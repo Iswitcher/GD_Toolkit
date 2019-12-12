@@ -3,7 +3,6 @@ function createFile(path, filename, data){
   
   var isDuplicateClear = DeleteDuplicates(folder, filename)
   folder.createFile(filename, data, "application/json")
-  
   return true;
 }
 
@@ -13,14 +12,12 @@ function DeleteDuplicates(folder, filename){
   while ( duplicates.hasNext() ){
     duplicates.next().setTrashed(true);
   }
-  return true;
 }
 
 function getFolderByPath(path){
   var parsedPath = parsePath(path);
   var rootFolder = DriveApp.getRootFolder()
-  var folder = recursiveSearchAndAddFolder(parsedPath, rootFolder);
-  return folder;
+  return recursiveSearchAndAddFolder(parsedPath, rootFolder);
 }
 
 function recursiveSearchAndAddFolder(parsedPath, parentFolder){
@@ -66,7 +63,6 @@ function checkPath(path){
   var re = /\/\/(\w+\/)+/;
   if(path.match(re)==null){
     throw new Error("File path "+path+" is invalid, it must be: '//.../'");
-    return false;
   }
   return true;
 }
