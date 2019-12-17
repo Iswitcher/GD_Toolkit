@@ -3,8 +3,6 @@ function isEmpty(data){
   else if( Array.isArray(data) )        return isEmptyArray(data);
   else if( typeof data == "object" )    return isEmptyObject(data);
   else                                  return isEmptyString(data);
-  
-  return false;
 }
 
 function isEmptyArray(data){

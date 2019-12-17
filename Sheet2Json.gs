@@ -41,7 +41,7 @@ function beautifyJson(data){
 }
 
 /**
- *  Returns parsed JSON array or object with parameters
+ *  Inputs object type (object/array) and returns parsed JSON data
  *
  *  @param {string} objectType "array"
  *  @param {string} key "dummy_1"
