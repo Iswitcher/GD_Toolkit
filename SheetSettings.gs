@@ -23,15 +23,9 @@ function getSettingsObject(range){
 }
 
 function getSettingsMarkerByName(name, array){
-  if(isEmpty(name)) {
-    throw new Error("Settings marker "+name+" isn't defined!");
-  }
+  if(isEmpty(name)) throw new Error("Settings marker "+name+" isn't defined!");
   
-  var coordinates = {
-    x:undefined,
-    y:undefined
-  };
-  
+  var coordinates = {}
   for(var i=0; i<array.length; i++){
     for(var j=0; j<array[i].length; j++){
       if(array[i][j] == name){
@@ -45,11 +39,7 @@ function getSettingsMarkerByName(name, array){
 }
 
 function findSettingsValue(settings, key){
-  if(!(key in settings)) {
-    throw new Error("Settings key "+key+" is not present");
-  }
-  if(isEmpty(settings[key])){
-    throw new Error("Setting "+key+" is empty.");
-  }  
+  if(!(key in settings))      throw new Error("Settings key "+key+" is not present");
+  if(isEmpty(settings[key]))  throw new Error("Setting "+key+" is empty.");
   return settings[key]
 }

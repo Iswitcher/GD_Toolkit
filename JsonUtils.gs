@@ -1,45 +1,39 @@
-function rangeToJsonObject(range){  
-  var index = toFlatList(filterRangeDataByAnchor(range, config.mainIndexAnchor));
-  var root = toFlatList(filterRangeDataByAnchor(range, config.mainRootAnchor));
-  var types = toFlatList(filterRangeDataByAnchor(range, config.mainTypeAnchor));
-  var keys = toFlatList(filterRangeDataByAnchor(range, config.mainKeyAnchor));
-  var data = filterRangeDataByAnchor(range, config.mainDataAnchor);
-  
-  return result = {
-    index: index,
-    root: root,
-    types: types,
-    keys: keys,
-    data: data
-  }
-}
-
-function toFlatList(array){
-  var result = [];
-  
-  for(var i=0; i<array.length; i++){
-    for(var j=0; j<array[i].length; j++){
-      result.push(array[i][j])
-    }
-  } 
-  return result;
-}
-
-function createJsonObject(jsonData){
+function createJsonObject(jsonData, indexFilter){
   var result = {};
   
   for(var row=0; row<jsonData.index.length; row++){
+    if(indexFilter != undefined && jsonData.index[row] != indexFilter) continue;
+    
     for(var column=0; column<jsonData.keys.length; column++){
-      var key = jsonData.root[row] + "/" + jsonData.keys[column];     
+      var key = addRootToPath(jsonData.root[row], jsonData.keys[column]);
       result = addPropertyRecursive(result, key, jsonData.types[column], jsonData.data[row][column])
     }
   }
   return JSON.stringify(result);
 }
 
-function createJsonArray(jsonData){
+function createJsonArray(jsonData, indexFilter){
   var result = [];
+  for(var row=0; row<jsonData.index.length; row++){
+    if(indexFilter != undefined && jsonData.index[row] != indexFilter) continue;
+    
+    var object = {}
+    for(var column=0; column<jsonData.keys.length; column++){
+      var key = addRootToPath(jsonData.root[row], jsonData.keys[column]);
+      object = addPropertyRecursive(object, key, jsonData.types[column], jsonData.data[row][column])
+    }
+    result.push(object);
+  }
   return JSON.stringify(result);
+}
+
+function addRootToPath(root, key){
+  if(!isEmpty(root)){
+    return root + "/" + key;
+  }
+  else{
+    return key;
+  }
 }
 
 function addPropertyRecursive(jsonObject, path, type, value){

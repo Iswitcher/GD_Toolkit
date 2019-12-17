@@ -40,4 +40,24 @@ function beautifyJson(data){
   return JSON.stringify(JSON.parse(data), jsonFormatArguments(), 2);
 }
 
-
+/**
+ *  Returns parsed JSON array or object with parameters
+ *
+ *  @param {string} objectType "array"
+ *  @param {string} key "dummy_1"
+ *  @param {string} range "C1:F10"
+ *  @return {array} Parsed JSON array or object with parameters
+ * @customfunction
+ *
+ */
+function toJson(objectType, key, range){
+  var dataObject = rangeToJsonObject(range);
+  
+  switch (objectType){
+    case "object":
+      return createJsonObject(dataObject, key);
+    case "array":
+      return createJsonArray(dataObject, key);
+    default: throw new Error("objectType must be array or object")
+  }
+}

@@ -36,7 +36,7 @@ function addAnchorOffset(coords, anchor){
 }
 
 function filterRangeColumns(range, start, isRight, count){
-  if(isEmpty(start))   throw new Error("Column starting point not defined");
+  if(start==undefined)   throw new Error("Column starting point not defined");
   if(isRight===undefined) isRight = true;
   if(isEmpty(count))   count = 0; //ignore limit if not defined
 
@@ -51,7 +51,7 @@ function filterRangeColumns(range, start, isRight, count){
 }
 
 function filterRangeRows(range, start, isDown, count){
-  if(isEmpty(start))   throw new Error("Column starting point not defined");
+  if(start==undefined)   throw new Error("Column starting point not defined");
   if(isDown===undefined) isDown = true;
   if(isEmpty(count))   count = 0; //ignore limit if not defined
   
@@ -59,4 +59,31 @@ function filterRangeRows(range, start, isDown, count){
   else if(isDown && count>=1)     return range.slice(start, start+count)
   else if(!isDown && count<1)     return range.slice(undefined, start+1)
   else                            return range.slice(start-count, start+1)
+}
+
+function rangeToJsonObject(range){  
+  var index = toFlatList(filterRangeDataByAnchor(range, config.mainIndexAnchor));
+  var root = toFlatList(filterRangeDataByAnchor(range, config.mainRootAnchor));
+  var types = toFlatList(filterRangeDataByAnchor(range, config.mainTypeAnchor));
+  var keys = toFlatList(filterRangeDataByAnchor(range, config.mainKeyAnchor));
+  var data = filterRangeDataByAnchor(range, config.mainDataAnchor);
+  
+  return result = {
+    index: index,
+    root: root,
+    types: types,
+    keys: keys,
+    data: data
+  }
+}
+
+function toFlatList(array){
+  var result = [];
+  
+  for(var i=0; i<array.length; i++){
+    for(var j=0; j<array[i].length; j++){
+      result.push(array[i][j])
+    }
+  } 
+  return result;
 }
