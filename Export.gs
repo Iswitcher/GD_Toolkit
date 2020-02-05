@@ -61,13 +61,13 @@ function ExportSingle(sheet, path, preppedJsonData){
 //inputs prepared data from PrepareJsonDataBySheet() and outs multiple JSON files named after each object
 function ExportSeparate(path, preppedJsonData){
   for(var object in preppedJsonData){
-    var filename       = preppedJsonData[object].objName + ".json";
+    var filename       = preppedJsonData[object].objName;
     var jsondata       = preppedJsonData[object].jsonBody
     var filedata       = {}
     filedata[filename] = jsondata
     
     filedata           = BeautifyJson(filedata)    
-    CreateFile(path, filename, filedata);
+    CreateFile(path, filename + ".json", filedata);
   }
   return true;
 }
