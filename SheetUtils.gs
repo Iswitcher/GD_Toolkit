@@ -1,89 +1,36 @@
-function getRangeBySheetName(name){
-  if(isEmpty(name)) return undefined;
-  
-  var range = SpreadsheetApp.getActive().getSheetByName(name)
-  return range.getDataRange().getValues()
+function GetAllSheets() {
+  var sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets()
+  var output = [];
+  for (var sheet in sheets){
+    var sheetName = sheets[sheet].getSheetName();
+    //sheetName = RemoveEmoji(sheetName);
+    output.push(sheetName);
+  }
+  return output;
 }
 
-function filterRangeDataByAnchor(range, anchor){
-  var coords = searchAnchorCoordsByName(range, anchor.name);
-  coords = addAnchorOffset(coords, anchor);
-  
-  range = filterRangeColumns(range, coords.coordX, anchor.isRight, anchor.columns);
-  range = filterRangeRows(range, coords.coordY, anchor.isDown, anchor.rows);
-  return range;  
+function RemoveEmoji(text){
+  var re = /[^a-zA-Z0-9_]+/g
+  return text.replace(re,"") 
 }
 
-function searchAnchorCoordsByName(range, anchor){
-  for (var y=0; y<range.length; y++){
-    for (var x=0; x<range[y].length; x++){
-      if(range[y][x] == anchor) {
-        return { coordX:x, coordY:y }
+function GetSheetValuesByName(name){
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name)
+  
+  if(sheet == undefined) throw new Error("Sheet '"+name+"' was not found.");
+  else return sheet.getDataRange().getValues();
+}
+
+function GetAnchorCoordsByName(anchor, data){
+  var coords = { x: 0, y: 0 }
+  
+  for(var row=0; row<data.length; row++){
+    for(var column=0; column<data[row].length; column++){
+      if(data[row][column] == anchor){
+        coords.x = column;
+        coords.y = row;  
       }
     }
   }
-  return undefined;
-}
-
-function addAnchorOffset(coords, anchor){
-  var offsetX = anchor.offsetX;
-  var offsetY = anchor.offsetY;
-  
-  coords.coordX += offsetX;
-  coords.coordY += offsetY;
-  
   return coords;
-}
-
-function filterRangeColumns(range, start, isRight, count){
-  if(start==undefined)   throw new Error("Column starting point not defined");
-  if(isRight===undefined) isRight = true;
-  if(isEmpty(count))   count = 0; //ignore limit if not defined
-
-  var result = []
-  for(var i=0; i<range.length; i++){
-    if(isRight && count<1)           result.push(range[i].slice(start))
-    else if(isRight && count>=1)     result.push(range[i].slice(start, start+count))
-    else if(!isRight && count<1)     result.push(range[i].slice(undefined, start+1))
-    else                             result.push(range[i].slice(start-count, start+1))
-  }
-  return result;
-}
-
-function filterRangeRows(range, start, isDown, count){
-  if(start==undefined)   throw new Error("Column starting point not defined");
-  if(isDown===undefined) isDown = true;
-  if(isEmpty(count))   count = 0; //ignore limit if not defined
-  
-  if(isDown && count<1)           return range.slice(start)
-  else if(isDown && count>=1)     return range.slice(start, start+count)
-  else if(!isDown && count<1)     return range.slice(undefined, start+1)
-  else                            return range.slice(start-count, start+1)
-}
-
-function rangeToJsonObject(range){  
-  var index = toFlatList(filterRangeDataByAnchor(range, config.mainIndexAnchor));
-  var root = toFlatList(filterRangeDataByAnchor(range, config.mainRootAnchor));
-  var types = toFlatList(filterRangeDataByAnchor(range, config.mainTypeAnchor));
-  var keys = toFlatList(filterRangeDataByAnchor(range, config.mainKeyAnchor));
-  var data = filterRangeDataByAnchor(range, config.mainDataAnchor);
-  
-  return result = {
-    index: index,
-    root: root,
-    types: types,
-    keys: keys,
-    data: data
-  }
-}
-
-function toFlatList(array){
-  var result = [];
-  
-  for(var i=0; i<array.length; i++){
-    for(var j=0; j<array[i].length; j++){
-      result.push(array[i][j])
-    }
-  } 
-  return result;
 }

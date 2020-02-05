@@ -1,5 +1,5 @@
-function createFile(path, filename, data){
-  var folder = getFolderByPath(path) 
+function CreateFile(path, filename, data){
+  var folder = GetFolderByPath(path) 
   
   var isDuplicateClear = DeleteDuplicates(folder, filename)
   folder.createFile(filename, data, "application/json")
@@ -14,24 +14,40 @@ function DeleteDuplicates(folder, filename){
   }
 }
 
-function getFolderByPath(path){
-  var parsedPath = parsePath(path);
+function GetFolderByPath(path){
+  var parsedPath = ParsePath(path);
   var rootFolder = DriveApp.getRootFolder()
-  return recursiveSearchAndAddFolder(parsedPath, rootFolder);
+  return RecursiveSearchAndAddFolder(parsedPath, rootFolder);
 }
 
-function recursiveSearchAndAddFolder(parsedPath, parentFolder){
+function ParsePath(path){
+  while ( CheckPath(path) ){
+    var pathArray = path.match(/\w+/g);
+    return pathArray;
+  }
+  return undefined;
+}
+
+function CheckPath(path){
+  var re = /\/\/(\w+\/)+/;
+  if(path.match(re)==null){
+    throw new Error("File path "+path+" is invalid, it must be: '//.../'");
+  }
+  return true;
+}
+
+function RecursiveSearchAndAddFolder(parsedPath, parentFolder){
   if(parsedPath.length == 0) return parentFolder;
    
   var pathSegment = parsedPath.splice(0,1).toString();
 
-  var folder = searchOrCreateChildByName(parentFolder, pathSegment);
+  var folder = SearchOrCreateChildByName(parentFolder, pathSegment);
   
-  return recursiveSearchAndAddFolder(parsedPath, folder);
+  return RecursiveSearchAndAddFolder(parsedPath, folder);
 }
 
-function searchOrCreateChildByName(parent, name){
-  var childFolder = searchFolderChildByName(parent, name); 
+function SearchOrCreateChildByName(parent, name){
+  var childFolder = SearchFolderChildByName(parent, name); 
   
   if(childFolder==undefined){
     childFolder = parent.createFolder(name);
@@ -39,7 +55,7 @@ function searchOrCreateChildByName(parent, name){
   return childFolder
 }
 
-function searchFolderChildByName(parent, name){
+function SearchFolderChildByName(parent, name){
   var folderIterator = parent.getFolders();
   
   while (folderIterator.hasNext()){
@@ -49,20 +65,4 @@ function searchFolderChildByName(parent, name){
     }
   }
   return undefined;
-}
-
-function parsePath(path){
-  while ( checkPath(path) ){
-    var pathArray = path.match(/\w+/g);
-    return pathArray;
-  }
-  return undefined;
-}
-
-function checkPath(path){
-  var re = /\/\/(\w+\/)+/;
-  if(path.match(re)==null){
-    throw new Error("File path "+path+" is invalid, it must be: '//.../'");
-  }
-  return true;
 }
