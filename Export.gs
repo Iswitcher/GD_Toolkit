@@ -1,8 +1,8 @@
 function testExport() {
-  var sheet     = "⚔️inv_items";
-  var path      = "//ZombieShop/default/inv_items";
+  var sheet     = "📜blueprints";
+  var path      = "//ZombieShop/default/blueprints";
   var method    = "separate";
-  var check     = "OK";
+  var check     = "✔️READY";
   var log       = "";
   
   ExportToJSON(sheet, path, method, check, log)

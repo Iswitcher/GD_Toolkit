@@ -32,7 +32,7 @@ function IsEmptyObject(data){
 }
 
 function IsEmptyString(data){
-  if (data == undefined || data == null || data == ""){
+  if (data == undefined || data == null || data === ""){
     return true;
   } 
   return false;

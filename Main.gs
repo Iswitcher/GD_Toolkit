@@ -68,37 +68,10 @@ function GetExportObject(data, anchors){
   return result;
 }
 
-//
-//
-//function PrepareMainData(anchors, data){
-//  for(var row=0; row<data.length; row++){
-//    for(var column=0; column<data[row].length; column++){
-//      for(var anchor in anchors){
-//        if(row>anchors[anchor].y && column==anchors[anchor].x){
-//          if(anchors[anchor].data == undefined) {
-//            anchors[anchor].data = []
-//          }
-//          anchors[anchor].data.push(data[row][column])
-//        }
-//      }
-//    }
-//  }
-//  return anchors;
-//}
+function GetSheetLastUpdateDate(sheetName){
+  return undefined; //TODO
+}
 
-
-//
-//function testLog(){
-//  var sheet = mainSheetName
-//  var anchor = "#LOG";
-//  for (var i=0; i<10; i++){
-//    var text = i
-//    UpdateLog(sheet, anchor, i, text)
-//  }
-//}
-//
-//function UpdateLog(sheet, anchor, index, text){
-//  var sheet = GetDataRangeBySheetName(sheet);
-//  var anchorCoords = GetAnchorCoordsByName(anchor, sheet.getDataRange().getValues());
-//  var blah = 123 
-//}
+function PostLog(sheetName){
+  return undefined; //TODO
+}
