@@ -1,7 +1,7 @@
 function testExport() {
-  var sheet     = "📜blueprints";
-  var path      = "//ZombieShop/default/blueprints";
-  var method    = "separate";
+  var sheet     = "🗺️maps";
+  var path      = "//ZombieShop/default";
+  var method    = "single";
   var check     = "✔️READY";
   var log       = "";
   
