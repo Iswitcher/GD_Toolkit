@@ -69,14 +69,21 @@ function AddJsonNode(jsonObject, node){
       }
       break;
     case "nameless": 
-      if(jsonObject[cleanNode] == undefined) {
-        jsonObject.splice(cleanNode, 0, {})
-      }
+      AddToArrayByIndex(jsonObject, cleanNode);
       break;
     default:
         jsonObject[cleanNode] = {}
   }
   return jsonObject;
+}
+
+function AddToArrayByIndex(array, index){
+  if(array[index] != undefined) return array;
+  
+  for(var i=array.length; i<=index; i++){
+    array.push({});
+  }
+  return array;
 }
 
 function AddJsonValue(jsonObject, node, value){
