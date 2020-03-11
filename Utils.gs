@@ -1,18 +1,3 @@
-function GetStatus(sheetName, enabledAnchor, okAnchor){
-  var count = 0;
-  var sheetData = SpreadsheetApp.getActiveSpreadsheet()
-                            .getSheetByName(sheetName)
-                            .getDataRange()
-                            .getValues();
-  var enabledAnchorCoords   = GetAnchorCoordsByName(enabledAnchor, sheetData);
-  var okAnchorCoords        = GetAnchorCoordsByName(okAnchor, sheetData);
-  for(var column=enabledAnchorCoords.x+1; column<sheetData[enabledAnchorCoords.y].length; column++){
-    if(sheetData[okAnchorCoords.y][column] != "OK") count++;
-  }
- if(count>0) return "❌ " + count + " Error(s)!";
- return "✔️READY";
-}
-
 function IsEmpty(data){
   if( data==undefined || data==null )   return true;
   else if( Array.isArray(data) )        return IsEmptyArray(data);
@@ -36,4 +21,14 @@ function IsEmptyString(data){
     return true;
   } 
   return false;
+}
+
+function PrintLog(title, msg){
+  var defaultDuration = 5;
+  SpreadsheetApp.getActiveSpreadsheet().toast(msg, title, defaultDuration)
+}
+
+function GetTimeDeltaString(time){
+  var delta = new Date() - time;
+  return delta/1000+"s";
 }

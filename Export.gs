@@ -3,34 +3,22 @@ function testExport() {
   var path      = "//ZombieShop/default";
   var method    = "single";
   var check     = "✔️READY";
-  var log       = "";
   
-  ExportToJSON(sheet, path, method, check, log)
+  ExportToJSON(sheet, path, method, check)
   return true;
 }
 
-var exportAnchors = {
-  techStart    : "###tech###",
-  techEnd      : "###end_tech###",
-  dataStart    : "###data###",
-  dataEnd      : "###end_data###",
-  dataOffset   : 1,
-  dataActive   : "###enable###"
-}
-
 //Main method for exporting. Inputs paremetes and outputs single/multiple JSONs into selected directory
-function ExportToJSON(sheet, path, method, check, log){
-  if(check!="✔️READY") {
-    throw new Error(sheet + " sheet seems to have some issues.")
-  }
-  var preppedJsonData = PrepareJsonDataBySheet(sheet);  
+function ExportToJSON(sheet, path, method, check){
+  if(check!="✔️READY") { throw new Error(sheet + " sheet seems to have some issues.") }
   
+  var preppedJsonData = PrepareJsonDataBySheet(sheet);  
   switch(method){
     case "single":
       ExportSingle(sheet, path, preppedJsonData);
       break;
     case "separate":
-      ExportSeparate(path, preppedJsonData);
+      ExportSeparate(sheet, path, preppedJsonData);
       break;
   }
   return true;
@@ -59,13 +47,13 @@ function ExportSingle(sheet, path, preppedJsonData){
 }
 
 //inputs prepared data from PrepareJsonDataBySheet() and outs multiple JSON files named after each object
-function ExportSeparate(path, preppedJsonData){
+function ExportSeparate(sheet, path, preppedJsonData){
   for(var object in preppedJsonData){
     var filename       = preppedJsonData[object].objName;
     var jsondata       = preppedJsonData[object].jsonBody
     var filedata       = {}
     filedata[filename] = jsondata
-    
+    PrintLog("Exporting", sheet+" / "+preppedJsonData[object].objName+".json");
     filedata           = BeautifyJson(filedata)    
     CreateFile(path, filename + ".json", filedata);
   }

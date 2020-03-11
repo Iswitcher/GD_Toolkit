@@ -1,77 +1,60 @@
-var mainSheetName = "Main"
-
-var mainAnchors = {
-  action     : "#ACTION",
-  object     : "#OBJECT",
-  path       : "#PATH",
-  method     : "#METHOD",
-  check     : "#CHECK",
-  last_date  : "#LAST_DATE",
-  log        : "#LOG"
-}
-
 function DoExport(){
-  var objects = GetObjects(mainSheetName, mainAnchors);
-  for(var object in objects){
-    ExportToJSON(
-      objects[object].object, 
-      objects[object].path, 
-      objects[object].method,
-      objects[object].check,
-      objects[object].log
-    )
-  }
-}
-
-function GetObjects(sheetName, mainAnchors){
-  var sheetData =  GetSheetValuesByName(sheetName);
-  var anchors = GetMainAnchors(mainAnchors, sheetData);
-  var exportObjects = GetExportObject(sheetData, anchors)
+  var time = new Date()
+  PrintLog("Start", "Gathering main data");
   
-  return exportObjects;
+  var schedule = GetSheetByName(mainSheetName);
+  var anchors = GetMainAnchors(mainAnchors,schedule.getValues());
+  var user = Session.getActiveUser().getEmail();
+  
+  LoopExport(schedule, anchors, user)  
+  PrintLog("Finish", "Done in "+GetTimeDeltaString(time));
 }
 
 function GetMainAnchors(anchors, data){
+  if(anchors==undefined){ throw new Error("Anchors are not defined") }
+  if(data==undefined){ throw new Error("Data is not defined") }
+  
   var result = {}
   for(var anchor in anchors){
     var key     = anchor;
     var coords  = GetAnchorCoordsByName(anchors[anchor], data);
-    
-    result[key] = {
-      "id"      :anchors[anchor],
-      "x"       :coords.x,
-      "y"       :coords.y
-    };
+    result[key] = { "x": coords.x, "y": coords.y };
   }
   return result;
 }
 
-function FilterMainSheetDataByRow(data, row){
-  return data.splice(0, row);
-}
-
-function GetExportObject(data, anchors){
-  var result = [];
+function LoopExport(range, anchors, user){
+  PrintLog("Start", "Looping through objects");
+  var objects = range.getValues();
   
-  for(var row in data){
-    if(row <= anchors.action.y) continue;
-    if(data[row][anchors.action.x] != true) continue;
-    if(data[row][anchors.action.x] == true && IsEmpty(data[row][anchors.object.x])) continue;
-    var object = {}
-    for(var anchor in anchors){
-      var key     = anchor
-      var value   = data[row][anchors[anchor].x];
-      object[key] = value;
-    }
-    result.push(object)
+  for (var row = anchors.action.y+1; row<objects.length; row++){
+    if(objects[row][anchors.action.x] != true) { continue; }
+    ExportObject(range, objects, row, anchors, user)
   }
-  return result;
 }
 
-function GetSheetLastUpdateDate(sheetName){
-  return undefined; //TODO
+function ExportObject(range, objects, row, anchors, user){
+  PrintLog("In progress", "Exporting "+objects[row][anchors.object.x]);
+  ExportToJSON(
+    objects[row][anchors.object.x], 
+    objects[row][anchors.path.x], 
+    objects[row][anchors.method.x],
+    objects[row][anchors.check.x]
+  )
+  UpdateLastDate(range, row, anchors.lastDate.x)
+  UpdateLog(range, row, anchors.log.x, user, objects[row][anchors.entities.x])
 }
 
-function PostLog(sheetName){
-  return undefined; //TODO
+function UpdateLastDate(range, row, column){
+  var values = range.getValues();
+  values[row][column] = new Date();
+  range.setValues(values)
+  range.getValues()
+}
+
+function UpdateLog(range, row, column, user, entities){
+  var values = range.getValues();
+  values[row][column] = "User "+ user + " uploaded " + entities + " objects.";
+  range.setValues(values)
+  range.getValues()
 }
