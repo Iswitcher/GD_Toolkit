@@ -54,7 +54,7 @@ function UpdateLastDate(range, row, column){
 
 function UpdateLog(range, row, column, user, entities){
   var values = range.getValues();
-  values[row][column] = "User "+ user + " uploaded " + entities + " objects.";
+  values[row][column] = "User "+ user + " exported " + entities + " objects.";
   range.setValues(values)
   range.getValues()
 }
