@@ -7,7 +7,7 @@ function DoExport(){
   var user = Session.getActiveUser().getEmail();
   
   LoopExport(schedule, anchors, user)  
-  PrintLog("Finish", "Done in "+GetTimeDeltaString(time));
+  PrintLog("Finish", "Done in "+GetTimeDeltaString(time), -1);
 }
 
 function GetMainAnchors(anchors, data){
@@ -41,20 +41,22 @@ function ExportObject(range, objects, row, anchors, user){
     objects[row][anchors.method.x],
     objects[row][anchors.check.x]
   )
-  UpdateLastDate(range, row, anchors.lastDate.x)
-  UpdateLog(range, row, anchors.log.x, user, objects[row][anchors.entities.x])
+  UpdateLastDate(row, anchors.lastDate.x)
+  UpdateLog(row, anchors.log.x, user, objects[row][anchors.entities.x])
 }
 
-function UpdateLastDate(range, row, column){
-  var values = range.getValues();
-  values[row][column] = new Date();
+function UpdateLastDate(row, column){
+  var range = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(mainSheetName).getRange(row+1, column+1)
+  var values = range.getValues()
+  values[0][0] = new Date();
   range.setValues(values)
   range.getValues()
 }
 
-function UpdateLog(range, row, column, user, entities){
-  var values = range.getValues();
-  values[row][column] = "User "+ user + " exported " + entities + " objects.";
+function UpdateLog(row, column, user, entities){
+  var range = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(mainSheetName).getRange(row+1, column+1)
+  var values = range.getValues()
+  values[0][0] = "User "+ user + " exported " + entities + " objects.";
   range.setValues(values)
   range.getValues()
 }

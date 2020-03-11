@@ -23,9 +23,9 @@ function IsEmptyString(data){
   return false;
 }
 
-function PrintLog(title, msg){
-  var defaultDuration = 5;
-  SpreadsheetApp.getActiveSpreadsheet().toast(msg, title, defaultDuration)
+function PrintLog(title, msg, duration){
+  if(IsEmpty(duration)) { duration = 5}
+  SpreadsheetApp.getActiveSpreadsheet().toast(msg, title, duration)
 }
 
 function GetTimeDeltaString(time){
