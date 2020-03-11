@@ -3,7 +3,6 @@ function GetAllSheets() {
   var output = [];
   for (var sheet in sheets){
     var sheetName = sheets[sheet].getSheetName();
-    //sheetName = RemoveEmoji(sheetName);
     output.push(sheetName);
   }
   return output;
@@ -12,6 +11,13 @@ function GetAllSheets() {
 function RemoveEmoji(text){
   var re = /[^a-zA-Z0-9_]+/g
   return text.replace(re,"") 
+}
+
+function GetSheetByName(name){
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name)
+  
+  if(sheet == undefined) throw new Error("Sheet '"+name+"' was not found.");
+  else return sheet.getDataRange();
 }
 
 function GetSheetValuesByName(name){
