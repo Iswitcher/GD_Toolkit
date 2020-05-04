@@ -35,9 +35,11 @@ function LoopExport(range, anchors, user){
 
 function ExportObject(range, objects, row, anchors, user){
   PrintLog("In progress", "Exporting "+objects[row][anchors.object.x]);
+  var jsonVersion = GetJsonVersion(objects, row, anchors)
   ExportToJSON(
     objects[row][anchors.object.x], 
-    objects[row][anchors.path.x], 
+    objects[row][anchors.path.x],
+    jsonVersion,
     objects[row][anchors.method.x],
     objects[row][anchors.check.x]
   )
@@ -59,4 +61,26 @@ function UpdateLog(row, column, user, entities){
   values[0][0] = "User "+ user + " exported " + entities + " objects.";
   range.setValues(values)
   range.getValues()
+}
+
+function GetJsonVersion(objects, row, column){
+  var versionCheck  = objects[row][column.do_version.x];
+  
+  var versionNumber = objects[row][column.ver_number.x];
+  if(IsEmpty(versionNumber)) versionNumber = 0;
+  
+  if(versionCheck) {
+    return UpdateJsonVersion(row, column.ver_number.x, versionNumber);
+  }
+  return undefined;
+}
+
+function UpdateJsonVersion(row, column, version){
+  var range = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(mainSheetName).getRange(row+1, column+1)
+  var values = range.getValues()
+  values[0][0] = parseInt(values[0][0])+1
+  range.setValues(values)
+  range.getValues()
+  
+  return values[0][0]
 }

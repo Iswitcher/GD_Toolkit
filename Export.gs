@@ -1,18 +1,23 @@
 function testExport() {
-  var sheet     = "🗺️maps";
-  var path      = "//ZombieShop/default";
+  var sheet     = "🏠town_buildings";
+  var path      = "//ZombieShop/default/town_buildings";
+  var version   = "1";
   var method    = "single";
   var check     = "✔️READY";
   
-  ExportToJSON(sheet, path, method, check)
+  ExportToJSON(sheet, path, version, method, check)
   return true;
 }
 
 //Main method for exporting. Inputs paremetes and outputs single/multiple JSONs into selected directory
-function ExportToJSON(sheet, path, method, check){
+function ExportToJSON(sheet, path, version, method, check){
   if(check!="✔️READY") { throw new Error(sheet + " sheet seems to have some issues.") }
   
-  var preppedJsonData = PrepareJsonDataBySheet(sheet);  
+  var preppedJsonData = PrepareJsonDataBySheet(sheet);
+  if(!IsEmpty(version)){
+    InsertJsonVersion(preppedJsonData, version);
+  }
+  
   switch(method){
     case "single":
       ExportSingle(sheet, path, preppedJsonData);
@@ -114,4 +119,12 @@ function GetObjectValues(filteredData, column){
     values.push(filteredData[i][column])
   } 
   return values;
+}
+
+function InsertJsonVersion(jsonArray, version){
+  var versionKey = "action_version";
+  for(var jsonObject in jsonArray){
+    jsonArray[jsonObject].jsonBody[versionKey] = version;
+  }
+  return jsonArray;
 }

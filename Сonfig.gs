@@ -4,6 +4,8 @@ var mainAnchors = {
   action     : "#ACTION",
   object     : "#OBJECT",
   path       : "#PATH",
+  do_version : "#VESION",
+  ver_number : "#LAST_VER",
   method     : "#METHOD",
   entities   : "#ENTITIES",
   check      : "#CHECK",
