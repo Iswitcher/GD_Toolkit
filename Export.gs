@@ -1,6 +1,6 @@
 function testExport() {
   var sheet     = "🏠town_buildings";
-  var path      = "//ZombieShop/default/town_buildings";
+  var path      = "//default";
   var version   = "1";
   var method    = "single";
   var check     = "✔️READY";

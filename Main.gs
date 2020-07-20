@@ -78,7 +78,11 @@ function GetJsonVersion(objects, row, column){
 function UpdateJsonVersion(row, column, version){
   var range = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(mainSheetName).getRange(row+1, column+1)
   var values = range.getValues()
-  values[0][0] = parseInt(values[0][0])+1
+  var version = parseInt(values[0][0])
+  
+  if(isNaN(version)) values[0][0] = 1
+  else values[0][0] = version+1
+    
   range.setValues(values)
   range.getValues()
   
