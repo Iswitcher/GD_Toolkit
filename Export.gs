@@ -1,6 +1,6 @@
 function testExport() {
   var sheet     = "🏠town_buildings";
-  var path      = "//default";
+  var path      = "//ZombieShop/default/town_buildings";
   var version   = "1";
   var method    = "single";
   var check     = "✔️READY";
@@ -45,8 +45,9 @@ function ExportSingle(sheet, path, preppedJsonData){
     var value     = preppedJsonData[object].jsonBody;
     jsonData[key] = value;
   }
+  jsonData        = TrimJsonEmptyObjects(jsonData)
   jsonData        = BeautifyJson(jsonData)
-  var filename        = RemoveEmoji(sheet)+".json"
+  var filename    = RemoveEmoji(sheet)+".json"
   CreateFile(path, filename, jsonData);
   return true;
 }
@@ -55,9 +56,11 @@ function ExportSingle(sheet, path, preppedJsonData){
 function ExportSeparate(sheet, path, preppedJsonData){
   for(var object in preppedJsonData){
     var filename       = preppedJsonData[object].objName;
-    var jsondata       = preppedJsonData[object].jsonBody
+    var jsonData       = preppedJsonData[object].jsonBody
+    jsonData        = TrimJsonEmptyObjects(jsonData)
+    
     var filedata       = {}
-    filedata[filename] = jsondata
+    filedata[filename] = jsonData
     PrintLog("Exporting", sheet+" / "+preppedJsonData[object].objName+".json");
     filedata           = BeautifyJson(filedata)    
     CreateFile(path, filename + ".json", filedata);

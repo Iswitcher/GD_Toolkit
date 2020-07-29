@@ -5,3 +5,9 @@ function BeautifyJson(data){
 function jsonFormatArguments(){
   return undefined;
 }
+
+function TrimJsonEmptyObjects(data){
+  var result = JSON.stringify(data)
+  result = result.replace(/{},?\n?/gm,"")
+  return JSON.parse(result)
+}
