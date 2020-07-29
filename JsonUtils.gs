@@ -8,6 +8,6 @@ function jsonFormatArguments(){
 
 function TrimJsonEmptyObjects(data){
   var result = JSON.stringify(data)
-  result = result.replace(/{},?\n?/gm,"")
+  result = result.replace(/{},?\r?\n?/gm,"")
   return JSON.parse(result)
 }
